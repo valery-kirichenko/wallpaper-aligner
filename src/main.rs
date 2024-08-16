@@ -148,7 +148,6 @@ fn main() {
         let display_res = display.bounds.resolution();
         match arg {
             WallpaperArgument::Image(file, filename) => {
-
                 let reader = match ImageReader::new(BufReader::new(file)).with_guessed_format() {
                     Ok(reader) => reader,
                     Err(err) => {
@@ -178,7 +177,7 @@ fn main() {
                 let cropping = match args.mode {
                     ResizeMode::Stretch => SrcCropping::None,
                     ResizeMode::Fill => SrcCropping::FitIntoDestination((0.5, 0.5)),
-                    ResizeMode::Fit =>SrcCropping::None,
+                    ResizeMode::Fit => SrcCropping::None,
                 };
                 let dest_res = match args.mode {
                     ResizeMode::Stretch | ResizeMode::Fill => (display_res.0, display_res.1),
@@ -186,9 +185,15 @@ fn main() {
                         let width_ratio = image.width() as f32 / display_res.0 as f32;
                         let height_ratio = image.height() as f32 / display_res.1 as f32;
                         if width_ratio - height_ratio > f32::EPSILON {
-                            (display_res.0, (image.height() as f32 / width_ratio).round() as u32)
+                            (
+                                display_res.0,
+                                (image.height() as f32 / width_ratio).round() as u32,
+                            )
                         } else {
-                            ((image.width() as f32 / height_ratio).round() as u32, display_res.1)
+                            (
+                                (image.width() as f32 / height_ratio).round() as u32,
+                                display_res.1,
+                            )
                         }
                     }
                 };
@@ -219,11 +224,7 @@ fn main() {
                 if dest_res.1 < display_res.1 {
                     offset.1 += (display_res.1 - dest_res.1) / 2
                 }
-                if let Err(err) = output.copy_from(
-                    &rgb8,
-                    offset.0,
-                    offset.1,
-                ) {
+                if let Err(err) = output.copy_from(&rgb8, offset.0, offset.1) {
                     println!(
                         "{} Unable to copy image '{}': {}",
                         "!".yellow(),
