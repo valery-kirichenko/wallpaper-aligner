@@ -1,0 +1,19 @@
+[package]
+name = "wallpaper-aligner"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+windows = { version = "0.58.0", features = ["Win32_Graphics_Gdi", "Win32_Devices_Display"] }
+image = "0.25"
+turbojpeg = { version = "1.1", features = ["image"] }
+fast_image_resize = { version = "4.2", features = ["image"] }
+clap = { version = "4.5", features = ["derive"] }
+hex_color = "3.0"
+colored = "2.1"
+inquire = "0.7"
+imageproc = "0.25"
+pluralizer = "0.4"
+
+[profile.release]
+lto = true
