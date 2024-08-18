@@ -132,7 +132,8 @@ fn main() {
         if !args.overwrite {
             let input = inquire::Text::new("Please, enter new name for the output wallpaper:")
                 .with_validator(MinLengthValidator::new(1));
-            args.output = input.prompt().unwrap_or(args.output);
+            let name = input.prompt().unwrap_or(args.output);
+            args.output = output_parser(&name).expect("function does not return Err");
         }
     }
     config.normalize();
@@ -270,10 +271,10 @@ fn get_display_configuration() -> DisplayConfiguration {
         monitor: HMONITOR,
         _: HDC,
         rect_ptr: *mut RECT,
-        lparam: LPARAM,
+        data: LPARAM,
     ) -> BOOL {
         let rect = *rect_ptr;
-        let data = lparam.0 as *mut (DisplayConfiguration, HashMap<String, String>);
+        let data = data.0 as *mut (DisplayConfiguration, HashMap<String, String>);
         let config = &mut (*data).0;
         config.bounds.min_x = config.bounds.min_x.min(rect.left);
         config.bounds.max_x = config.bounds.max_x.max(rect.right);
